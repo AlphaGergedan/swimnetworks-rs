@@ -1,12 +1,12 @@
 use crate::{RandomFeatureSamplerConfig, SWIMSamplerConfig, Sampler};
 
-pub enum SamplerConfig {
+pub enum SamplerConfig<'a> {
     RandomFeature(RandomFeatureSamplerConfig),
-    SWIM(SWIMSamplerConfig),
+    SWIM(SWIMSamplerConfig<'a>),
 }
 
-impl SamplerConfig {
-    pub fn new(self) -> Sampler {
+impl<'a> SamplerConfig<'a> {
+    pub fn new(self) -> Sampler<'a> {
         match self {
             SamplerConfig::RandomFeature(config) => {
                 Sampler {

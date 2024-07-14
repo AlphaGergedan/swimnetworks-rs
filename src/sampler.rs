@@ -9,12 +9,12 @@ pub use swim::SWIMSamplerConfig;
 pub use config::SamplerConfig;
 
 /// Hidden layer sampler for neural network models.
-pub struct Sampler {
-    sampler_config: SamplerConfig,
-    sampler: Box<dyn Sample>,
+pub struct Sampler<'a> {
+    sampler_config: SamplerConfig<'a>,
+    sampler: Box<dyn Sample + 'a>,
 }
 
-impl Sampler {
+impl Sampler<'_> {
     pub fn name(&self) -> String {
         match self.sampler_config {
             SamplerConfig::RandomFeature(_) => "Random Feature".to_string(),
@@ -23,7 +23,7 @@ impl Sampler {
     }
 }
 
-impl Sample for Sampler {
+impl Sample for Sampler<'_> {
     fn sample(&self, model: &mut Model) {
         self.sampler.sample(model);
     }
