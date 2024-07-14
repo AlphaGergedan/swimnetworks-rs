@@ -8,6 +8,6 @@ pub struct RandomFeatureSamplerConfig {
 
 impl RandomFeatureSamplerConfig {
     pub fn new(self) -> RandomFeatureSampler {
-        RandomFeatureSampler::new(self.weight_sampler, self.bias_sampler)
+        RandomFeatureSampler::new(self)
     }
 }
