@@ -1,6 +1,6 @@
 use ndarray::Array;
 use ndarray_rand::{rand_distr::{Normal, Uniform}, RandomExt};
-use crate::{Model, Sample, random_feature::{WeightSampler, BiasSampler}};
+use crate::{random_feature::{BiasSampler, WeightSampler}, Model, RandomFeatureSamplerConfig, Sample};
 
 pub struct RandomFeatureSampler {
     weight_sampler: WeightSampler,
@@ -8,8 +8,8 @@ pub struct RandomFeatureSampler {
 }
 
 impl RandomFeatureSampler {
-    pub fn new(weight_sampler: WeightSampler, bias_sampler: BiasSampler) -> Self {
-        Self { weight_sampler, bias_sampler }
+    pub fn new(config: RandomFeatureSamplerConfig) -> Self {
+        Self { weight_sampler: config.weight_sampler, bias_sampler: config.bias_sampler }
     }
 }
 
@@ -36,4 +36,58 @@ fn sample_dense_layer_weights_normally(model: &mut Model, mean: f64, std_dev: f6
 fn sample_dense_layer_biases_uniformly(model: &mut Model, min: f64, max: f64) {
     let biases = Array::<f64, _>::random(model.first_layer().biases().dim(), Uniform::new(min, max));
     model.first_layer_mut().set_biases(biases)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{ModelConfig, Activation, Model};
+    use super::*;
+
+    #[test]
+    fn sample_weights_with_correct_dimensions() {
+        let mut model = get_shallow_model(1, 1, 256);
+
+        let dims_before = model.first_layer().weights().dim();
+        sample_dense_layer_weights_normally(&mut model, 0., 1.);
+        let dims_after = model.first_layer().weights().dim();
+
+        assert_eq!(dims_after, dims_before);
+
+        let mut model = get_shallow_model(20, 20, 50);
+
+        let dims_before = model.first_layer().weights().dim();
+        sample_dense_layer_weights_normally(&mut model, 0., 1.);
+        let dims_after = model.first_layer().weights().dim();
+
+        assert_eq!(dims_after, dims_before);
+    }
+
+    #[test]
+    fn sample_biases_with_correct_dimensions() {
+        let mut model = get_shallow_model(1, 1, 256);
+
+        let dims_before = model.first_layer().biases().dim();
+        sample_dense_layer_biases_uniformly(&mut model, -10., 10.);
+        let dims_after = model.first_layer().biases().dim();
+
+        assert_eq!(dims_after, dims_before);
+
+        let mut model = get_shallow_model(20, 20, 50);
+
+        let dims_before = model.first_layer().biases().dim();
+        sample_dense_layer_biases_uniformly(&mut model, -10., 10.);
+        let dims_after = model.first_layer().biases().dim();
+
+        assert_eq!(dims_after, dims_before);
+    }
+
+    fn get_shallow_model(input_size: usize, output_size: usize, layer_width: usize) -> Model {
+        let model_config = ModelConfig {
+            activation: Activation::Tanh,
+            input_size,
+            output_size,
+            layer_width,
+        };
+        model_config.new()
+    }
 }
