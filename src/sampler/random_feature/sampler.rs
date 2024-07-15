@@ -1,3 +1,5 @@
+use std::f64::consts::PI;
+
 use ndarray::Array;
 use ndarray_rand::{rand_distr::{Normal, Uniform}, RandomExt};
 use crate::{random_feature::{BiasSampler, WeightSampler}, Model, RandomFeatureSamplerConfig, Sample};
@@ -22,7 +24,7 @@ impl Sample for RandomFeatureSampler {
 
         match self.bias_sampler {
             // TODO: make uniform sampling range variable
-            BiasSampler::Uniform => sample_dense_layer_biases_uniformly(model, 0., 10.),
+            BiasSampler::Uniform => sample_dense_layer_biases_uniformly(model, -PI, PI),
             _ => unimplemented!("-> Given bias sampling method for random feature is not implemented yet."),
         }
     }
