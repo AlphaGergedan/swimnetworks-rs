@@ -1,12 +1,18 @@
-use ndarray::prelude::*;
-use ndarray_linalg::Norm;
-use std::mem;
-use std::collections::HashSet;
+use std::{mem, collections::HashSet};
 
+use ndarray::{Array, Array2};
+use ndarray_linalg::Norm;
 use ndarray_rand::{rand_distr::Uniform, RandomExt};
+
 use swimnetworks_rs::{
     // neural network basis
-    random_feature, swim, Activation, Layer, Model, ModelConfig, RandomFeatureSamplerConfig, SWIMSamplerConfig, Sample, SamplerConfig
+    Activation, Layer, Model, ModelConfig, Sample, SamplerConfig,
+
+    // random feature sampler
+    random_feature, RandomFeatureSamplerConfig,
+
+    // swim sampler
+    swim, SWIMSamplerConfig
 };
 
 type Input = f64;
@@ -45,7 +51,7 @@ fn main() {
     };
 
     let targets: [Target; 4] = [polynomial_deg_1, polynomial_deg_2, polynomial_deg_3, trigonometric];
-    let (train_inputs, test_inputs) = sample_train_test_set_inputs(-10_f64, 10_f64, 8000, 2000);
+    let (train_inputs, test_inputs) = sample_train_test_set_inputs(-10_f64, 10_f64, 9000, 3000);
 
     for target in targets.into_iter() {
         let train_truths = get_truths(target.target_fn, train_inputs.clone());
@@ -53,25 +59,23 @@ fn main() {
 
         println!("-> Fitting {}", target.name);
         println!("-> Equation: {}\n", target.equation);
-        println!("------ Random Feature Sampling ------");
+        println!("L2 Error Relative:");
+
         let random_feature_sampled_model = get_random_feature_sampled_model(train_inputs.clone(), train_truths.clone());
         let test_outputs = random_feature_sampled_model.forward(test_inputs.clone());
         let rel_error = l2_error_relative(&test_truths, &test_outputs);
         drop(test_outputs);
         drop(random_feature_sampled_model);
-        println!("-> L2 error relative: {}", rel_error);
-        println!("-------------------------------------");
+        println!("-> Random Feature Sampled Model: \t{}", rel_error);
 
-        println!("----------- SWIM Sampling -----------");
         let swim_sampled_model = get_swim_sampled_model(train_inputs.clone(), train_truths.clone());
         let test_outputs = swim_sampled_model.forward(test_inputs.clone());
         let rel_error = l2_error_relative(&test_truths, &test_outputs);
         drop(test_outputs);
         drop(swim_sampled_model);
-        println!("-> L2 error relative: {}", rel_error);
-        println!("-------------------------------------");
-        println!("-------------------------------------");
+        println!("-> SWIM Sampled Model: \t\t\t{}\n", rel_error);
     }
+    println!("----------------------------------\n");
 }
 
 fn l2_error_relative(truths: &Outputs, outputs: &Outputs) -> f64 {
@@ -169,6 +173,7 @@ fn sample_train_test_set_inputs(lower_bound: Input, upper_bound: Input, train_si
 
     let mut train_set_inputs: Inputs;
     let mut test_set_inputs: Inputs;
+
     let mut unique_inputs = HashSet::<DoubleIEEE>::new();
 
     loop {
