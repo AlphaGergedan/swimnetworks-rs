@@ -72,7 +72,7 @@ fn random_feature_sampler_bias_range_test() {
 
     sampler.sample(&mut model);
 
-    let (min_bias, max_bias)= model.first_layer().biases().fold((f64::INFINITY, f64::NEG_INFINITY), |(min_bias, max_bias), &bias| {
+    let (min_bias, max_bias) = model.first_layer().biases().fold((f64::INFINITY, f64::NEG_INFINITY), |(min_bias, max_bias), &bias| {
         (min_bias.min(bias), max_bias.max(bias))
     });
 
