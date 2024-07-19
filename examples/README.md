@@ -5,7 +5,7 @@ Simple regression example with one-dimensional polynomial and trigonometric func
 
 ## Running the example
 
-```rs
+```rust
 cargo run --example regression --release
 ```
 
@@ -16,6 +16,6 @@ Simple classification example with two-dimensional inputs and three classes that
 
 ## Running the example
 
-```rs
+```rust
 cargo run --example classification --release
 ```
