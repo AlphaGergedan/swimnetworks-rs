@@ -1,9 +1,16 @@
 [package]
+authors = ["AlphaGergedan <rahma@in.tum.de>"]
 name = "swimnetworks-rs"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Swiftly train randomized neural networks on CPU."
+readme = "README.md"
+repository = "https://github.com/alphagergedan/swimnetworks-rs"
+categories = ["science", "mathematics"]
+keywords = ["linear", "matrix", "vector", "math", "machine-learning", "neural-network", "fast-training", "ndarray"]
 
 [dependencies]
 ndarray = "0.15.6"
-ndarray-linalg = { version = "0.16.0", features = ["openblas-system"] }
+ndarray-linalg = { version = "0.16.0", features = ["openblas-static"] }
 ndarray-rand = "0.14.0"
