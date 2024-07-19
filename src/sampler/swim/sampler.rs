@@ -181,7 +181,7 @@ fn candidate_weights(candidate_d_outputs: Outputs, candidate_distances: Distance
 
     // When all gradients are small avoid division by a small number
     // and default to uniform distribution.
-    if gradients.sum() < 1e-10_f64 {
+    if gradients.sum() < 1e-10_f64 || gradients.sum().is_nan() {
         let ones = Array::<f64, Ix1>::ones(gradients.dim());
         let len = gradients.len() as f64;
 
