@@ -4,12 +4,16 @@ use ndarray::Array;
 use ndarray_rand::{rand_distr::{Normal, Uniform}, RandomExt};
 use crate::{random_feature::{BiasSampler, WeightSampler}, Model, RandomFeatureSamplerConfig, Sample};
 
+/// Random feature model sampler
 pub struct RandomFeatureSampler {
     weight_sampler: WeightSampler,
     bias_sampler: BiasSampler,
 }
 
 impl RandomFeatureSampler {
+    /// Creates a new [`RandomFeatureSampler`] given configuration. But directly using this
+    /// function is discouraged. See [`crate::SamplerConfig::new`] instead.
+    /// [`crate::SamplerConfig`] wraps a specific sampler config.
     pub fn new(config: RandomFeatureSamplerConfig) -> Self {
         Self { weight_sampler: config.weight_sampler, bias_sampler: config.bias_sampler }
     }

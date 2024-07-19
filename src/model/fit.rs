@@ -2,7 +2,7 @@ use ndarray::{concatenate, Array, Array2, ArrayView2, Axis, s};
 use ndarray_linalg::LeastSquaresSvdInPlace;
 use crate::{Model, Layer};
 
-/// Methods for fitting the model.
+/// Methods for fitting.
 impl Model {
     /// Fits the last layer (linear2) using least squares solution, in a supervised setting.
     pub fn fit(&mut self, inputs: ArrayView2<f64>, truths: ArrayView2<f64>) {

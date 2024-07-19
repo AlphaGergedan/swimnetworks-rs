@@ -6,14 +6,21 @@ mod fit;
 
 pub use config::*;
 
-/// Shallow neural network model.
+/// Shallow neural network model with one linear layer followed by an activation function and
+/// another linear layer.
+///
+/// # Examples
+///
+/// * See [`ModelConfig`] and [`ModelConfig::new`] for model creation.
+/// * See [`crate::random_feature`] and [`crate::swim`] for sampling.
+/// * See [`Model::fit`] for training.
 pub struct Model {
     linear1: Linear,
     activation: Activation,
     linear2: Linear,
 }
 
-/// Model encapsulation.
+/// Methods for encapsulation.
 impl Model {
     /// First (linear) layer of the network.
     pub fn first_layer(&self) -> &Linear {
@@ -31,22 +38,22 @@ impl Model {
         &self.activation
     }
 
-    // Last (linear) layer of the network.
+    /// Last (linear) layer of the network.
     pub fn last_layer(&self) -> &Linear {
         &self.linear2
     }
 
-    /// Network width.
+    /// Network width (number of neurons in the first linear layer).
     pub fn layer_width(&self) -> usize {
         self.first_layer().weights().ncols()
     }
 
-    /// Size (number of flattened dimensions) of the input to the network.
+    /// Size (number of dimensions) of the input to the network.
     pub fn input_size(&self) -> usize {
         self.first_layer().weights().nrows()
     }
 
-    /// Size (number of flattened dimensions) of the output of the network.
+    /// Size (number of dimensions) of the output of the network.
     pub fn output_size(&self) -> usize {
         self.last_layer().weights().ncols()
     }
@@ -61,7 +68,7 @@ impl Model {
         self.number_of_weights() + self.number_of_biases()
     }
 
-    /// Total number of parameters in the linear layer weights of the network.
+    // Total number of parameters in the linear layer weights of the network.
     fn number_of_weights(&self) -> usize {
         let dense_weights = self.first_layer().weights().len();
         let linear_weights = self.last_layer().weights().len();
@@ -69,7 +76,7 @@ impl Model {
         dense_weights + linear_weights
     }
 
-    /// Total number of parameters in the linear layer biases of the network.
+    // Total number of parameters in the linear layer biases of the network.
     fn number_of_biases(&self) -> usize {
         let dense_biases = self.first_layer().biases().len();
         let linear_biases = self.last_layer().biases().len();

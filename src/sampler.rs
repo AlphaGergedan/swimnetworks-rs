@@ -1,8 +1,8 @@
 use crate::{Model, Sample};
 
-pub mod config;
 pub mod random_feature;
 pub mod swim;
+mod config;
 
 pub use random_feature::RandomFeatureSamplerConfig;
 pub use swim::SWIMSamplerConfig;
@@ -15,6 +15,7 @@ pub struct Sampler<'a> {
 }
 
 impl Sampler<'_> {
+    /// Returns the sampler name as a [`String`].
     pub fn name(&self) -> String {
         match self.sampler_config {
             SamplerConfig::RandomFeature(_) => "Random Feature".to_string(),

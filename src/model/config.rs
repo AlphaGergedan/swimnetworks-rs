@@ -1,6 +1,7 @@
 use ndarray::Array;
 use crate::{Activation, Linear, Model};
 
+/// Model configuration, used to create a new shallow neural network model.
 pub struct ModelConfig {
     pub layer_width: usize,
     pub input_size: usize,
@@ -9,6 +10,21 @@ pub struct ModelConfig {
 }
 
 impl ModelConfig {
+    /// Creates a new [`Model`] with the given configuration.
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// // Constructs a mutable shallow neural network model with 512 neurons and ReLU activation
+    /// // function that take one-dimensional inputs and produce one-dimensional outputs.
+    /// let model_config = ModelConfig {
+    ///     activation: Activation::Relu,
+    ///     input_size: 1,
+    ///     output_size: 1,
+    ///     layer_width: 512,
+    /// };
+    /// let mut model = model_config.new();
+    /// ```
     pub fn new(self) -> Model {
         // of shape (input_size, layer_width), because we want to have data matrix
         // X mult by weights for the forward pass

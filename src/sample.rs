@@ -1,7 +1,7 @@
 use crate::Model;
 
+/// [`Sample`] trait includes [`Sample::sample`] that should update the hidden layer weights
+/// and biases in the given model using a sampling method.
 pub trait Sample {
-    // TODO: better would be to receive a list of mutable references to the weights and biases.
-    // &mut Model makes the whole model to be mutable.
     fn sample(&self, model: &mut Model);
 }

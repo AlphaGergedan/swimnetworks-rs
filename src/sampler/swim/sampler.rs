@@ -10,10 +10,11 @@ type Outputs = Array2<f64>;
 type Indices = Array1<usize>;
 type Distances = Array1<f64>;
 
-/// Directions are same as Inputs: there are as many directions as input features
+// Directions are same as Inputs: there are as many directions as input features
 type Directions = Inputs;
 type NormalizedDirections = Directions;
 
+/// SWIM sampler.
 pub struct SWIMSampler<'a> {
     inputs: ArrayView2<'a, f64>,
     outputs: ArrayView2<'a, f64>,
@@ -22,6 +23,9 @@ pub struct SWIMSampler<'a> {
 }
 
 impl<'a> SWIMSampler<'a> {
+    /// Creates a new [`SWIMSampler`] given configuration. But directly using this
+    /// function is discouraged. See [`crate::SamplerConfig::new`] instead.
+    /// [`crate::SamplerConfig`] wraps a specific sampler config.
     pub fn new(config: SWIMSamplerConfig<'a>) -> Self {
         Self {
             inputs: config.inputs,
@@ -87,7 +91,7 @@ impl<'a> Sample for SWIMSampler<'a> {
     }
 }
 
-// inputs has shape (N, D), where N is the number of sampled and D is the dimension of the inputs
+// Samples the parameters of the hidden layer of the given model using SWIM algorithm.
 fn sample_params(model: &mut Model, selected_input_from: Array2<f64>, normalized_directions: Array2<f64>, distances: Array1<f64>, param_sampler: ParamSampler) {
     assert_eq!(model.layer_width(), selected_input_from.nrows());
     assert_eq!(model.layer_width(), normalized_directions.nrows());
@@ -132,18 +136,18 @@ fn sample_params(model: &mut Model, selected_input_from: Array2<f64>, normalized
     assert_eq!(dims_after, dims_before);
 }
 
-/// Sample directions from points to other points in the given dataset (inputs, outputs).
-///
-/// # Returns
-///
-/// Candidates (*from* parts)
-///
-/// Candidates (*to* part)
-///
-/// Normalized directions, 2d array of directions computed using candidate inputs *from* and *to*
-/// parts, and normalized using L2-Norm.
-///
-/// Distances between *from* and *to* candidates as 1d array.
+// Sample directions from points to other points in the given dataset (inputs, outputs).
+//
+// # Returns
+//
+// * Candidates (*from* parts)
+//
+// * Candidates (*to* part)
+//
+// * Normalized directions, 2d array of directions computed using candidate inputs *from* and *to*
+// parts, and normalized using L2-Norm.
+//
+// Distances between *from* and *to* candidates as 1d array.
 fn sample_candidates(inputs: ArrayView2<f64>, num_candidates: usize) -> (Indices, Indices, Inputs, Inputs, NormalizedDirections, Distances) {
     let input_size = inputs.nrows();
 
@@ -170,6 +174,14 @@ fn sample_candidates(inputs: ArrayView2<f64>, num_candidates: usize) -> (Indices
     (candidate_indices_from, candidate_indices_to, candidate_inputs_from, candidate_inputs_to, normalized_directions, distances)
 }
 
+// Computes weights for each candidate depending on their differences using the probability
+// distribution defined in [SWIM paper][associated_paper]. Candidates are not given as input to the
+// function, rather, their distances and output differences (gradients) are given. Utilizing this
+// function when picking the candidates we sample at the large gradients of the target function.
+//
+// # Returns
+//
+// * Array of probabilities for each candidate.
 fn candidate_weights(candidate_d_outputs: Outputs, candidate_distances: Distances) -> Array1<f64> {
     // Compute the maximum change over all directions in the output to sample at large gradients
     // over all output directions
