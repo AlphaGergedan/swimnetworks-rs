@@ -667,7 +667,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "swimnetworks-rs"
+name = "swimnetworks"
 version = "0.1.0"
 dependencies = [
  "ndarray",

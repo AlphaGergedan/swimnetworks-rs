@@ -1,5 +1,5 @@
 use ndarray::{array, Array, Array2};
-use swimnetworks_rs::{
+use swimnetworks::{
     Activation, Model, ModelConfig, Sample, SamplerConfig,
     swim, SWIMSamplerConfig,
 };

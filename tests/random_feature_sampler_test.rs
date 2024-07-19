@@ -1,5 +1,5 @@
 use std::f64::consts::PI;
-use swimnetworks_rs::{
+use swimnetworks::{
     Activation, Model, ModelConfig,
     Sample, SamplerConfig,
     random_feature, RandomFeatureSamplerConfig,

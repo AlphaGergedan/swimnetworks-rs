@@ -1,6 +1,6 @@
 [package]
 authors = ["AlphaGergedan <rahma@in.tum.de>"]
-name = "swimnetworks-rs"
+name = "swimnetworks"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"

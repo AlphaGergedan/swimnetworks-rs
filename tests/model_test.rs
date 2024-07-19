@@ -1,6 +1,6 @@
 use ndarray::{array, ArrayView2};
 use ndarray_linalg::Norm;
-use swimnetworks_rs::{
+use swimnetworks::{
     Activation, Layer, ModelConfig, SamplerConfig, Sample,
     RandomFeatureSamplerConfig, random_feature,
 };
