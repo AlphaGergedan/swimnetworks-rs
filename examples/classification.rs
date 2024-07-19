@@ -3,7 +3,7 @@ use std::{collections::HashSet, mem};
 use ndarray::{concatenate, s, stack, Array, Array2, ArrayView1, Axis};
 use ndarray_rand::{rand::{seq::SliceRandom, thread_rng}, rand_distr::Normal, RandomExt};
 
-use swimnetworks_rs::{
+use swimnetworks::{
     // neural network basis
     Activation, Layer, Model, ModelConfig, Sample, SamplerConfig,
 
@@ -105,7 +105,7 @@ fn main() {
     let (test_inputs, test_truths) = shuffle_input_output_sets(test_inputs, test_truths);
 
     println!("-> Fitting 3 class classification");
-    println!("-> Distributions: a ~ N((-1,0), Identity), b ~ N((1,0), Identity), c ~ N(0,1), Identity)");
+    println!("-> Class Distributions: a ~ N((-2,0), Identity), b ~ N((2,0), Identity), c ~ N(0,2), Identity)");
     println!("Accuracy:");
 
     let random_feature_sampled_model = get_random_feature_sampled_model(train_inputs.clone(), train_truths.clone());
