@@ -57,7 +57,7 @@ impl<'a> Sample for SWIMSampler<'a> {
                 sample_params(model, candidate_inputs_from, candidate_normalized_directions, candidate_distances, self.param_sampler);
             },
             // TODO: use input_norm and output_norm when sampling points, and selection weights
-            InputSamplerProbDist::SWIM(input_norm, output_norm) => {
+            InputSamplerProbDist::SWIM(_, _) => {
                 //todo!("SWIM SAMPLING CALLED on INPUTS");
                 // Compute function value differences of the candidate points
                 let candidate_outputs_from = self.outputs.select(Axis(0), candidate_indices_from.as_slice().unwrap());

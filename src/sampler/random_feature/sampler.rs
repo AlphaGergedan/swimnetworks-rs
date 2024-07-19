@@ -19,13 +19,13 @@ impl Sample for RandomFeatureSampler {
     fn sample(&self, model: &mut Model) {
         match self.weight_sampler {
             WeightSampler::Normal => sample_dense_layer_weights_normally(model, 0., 1.),
-            _ => unimplemented!("-> Given weight sampling method for random feature is not implemented yet."),
+            //_ => unimplemented!("-> Given weight sampling method for random feature is not implemented yet."),
         }
 
         match self.bias_sampler {
             // TODO: make uniform sampling range variable
             BiasSampler::Uniform => sample_dense_layer_biases_uniformly(model, -PI, PI),
-            _ => unimplemented!("-> Given bias sampling method for random feature is not implemented yet."),
+            //_ => unimplemented!("-> Given bias sampling method for random feature is not implemented yet."),
         }
     }
 }
