@@ -62,18 +62,22 @@ fn main() {
         println!("L2 Error Relative:");
 
         let random_feature_sampled_model = get_random_feature_sampled_model(train_inputs.clone(), train_truths.clone());
+        let train_outputs = random_feature_sampled_model.forward(train_inputs.clone());
         let test_outputs = random_feature_sampled_model.forward(test_inputs.clone());
-        let rel_error = l2_error_relative(&test_truths, &test_outputs);
+        let train_error = l2_error_relative(&train_truths, &train_outputs);
+        let test_error = l2_error_relative(&test_truths, &test_outputs);
         drop(test_outputs);
         drop(random_feature_sampled_model);
-        println!("-> Random Feature Sampled Model: \t{}", rel_error);
+        println!("-> Random Feature Sampled Model: \t train error = {}, test error = {}", train_error, test_error);
 
         let swim_sampled_model = get_swim_sampled_model(train_inputs.clone(), train_truths.clone());
+        let train_outputs = swim_sampled_model.forward(train_inputs.clone());
         let test_outputs = swim_sampled_model.forward(test_inputs.clone());
-        let rel_error = l2_error_relative(&test_truths, &test_outputs);
+        let train_error = l2_error_relative(&train_truths, &train_outputs);
+        let test_error = l2_error_relative(&test_truths, &test_outputs);
         drop(test_outputs);
         drop(swim_sampled_model);
-        println!("-> SWIM Sampled Model: \t\t\t{}\n", rel_error);
+        println!("-> SWIM Sampled Model: \t\t\t train error = {}, test error = {}\n", train_error, test_error);
     }
     println!("----------------------------------\n");
 }
