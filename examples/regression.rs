@@ -4,7 +4,7 @@ use ndarray::{Array, Array2};
 use ndarray_linalg::Norm;
 use ndarray_rand::{rand_distr::Uniform, RandomExt};
 
-use swimnetworks_rs::{
+use swimnetworks::{
     // neural network basis
     Activation, Layer, Model, ModelConfig, Sample, SamplerConfig,
 
